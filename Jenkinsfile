@@ -26,6 +26,12 @@ pipeline {
                 }
             }
         }
+        stage('Create docker image') {
+            steps {
+                echo 'Creating docker image'
+                sh 'docker image build -t myapp.local/javaapp:"${BUILD_NUMBER}" .'
+            }
+        }
     }
 }
 
