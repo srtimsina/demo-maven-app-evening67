@@ -5,7 +5,7 @@ pipeline {
         stage('Compile') {
             steps {
                 echo 'Compiling source code'
-                sh 'date'
+                sh 'mvn -f pom.xml clean compile'
             }
         }
         stage('Unittest') {
@@ -16,36 +16,14 @@ pipeline {
         stage('build app') {
             steps {
                 echo 'packaging the app'
-                sh 'date'
+                sh 'mvn -f pom.xml package'
             }
-        }
-        stage('create docker image') {
-            steps {
-                echo 'creating docker image'
-                sh 'date'
-            }
-        }
-        stage('scan docker image') {
-            steps {
-                echo 'scanning docker images'
-                sh 'date'
-            }
-        }
-        stage('Push image') {
-            steps {
-                echo 'Push image to dokcer registry'
-                sh 'date'
-            }
-        }
-        stage('Archive artifact') {
-            steps {
-                echo 'Archiving artifact'
-                sh 'date'
-            }
-        }
-        stage('Deploy to dev env') {
-            steps {
-                echo 'deploying to dev env'
+            post {
+                success {
+                    echo "Build success, archiving the artifact"
+                    archiveArtifacts artifacts: '**/*.war'
+
+                }
             }
         }
     }
