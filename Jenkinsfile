@@ -32,6 +32,12 @@ pipeline {
                 sh 'docker image build -t myapp.local/javaapp:"${BUILD_NUMBER}" .'
             }
         }
+        stage('Scan docker image') {
+            steps {
+                echo 'Creating docker image'
+                sh 'trivy image --timeout 10m --scanners vuln --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed myapp.local/javaapp:$BUILD_NUMBER'
+            }
+        }
     }
 }
 
