@@ -49,6 +49,23 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Dev Instance') {
+            steps {
+                echo 'Deploying to Dev env.'
+                sh 'docker container rm -f java-app-dev-instance || true'
+                sh 'docker run -d -p 8082:8080 --name java-app-dev-instance ${dockerImage}:${BUILD_NUMBER}'
+            }
+        }
+        stage('Deploy Production instance'){
+            steps {
+                timeout(time:1, unit:'HOURS'){
+                input message:'Approve PRODUCTION Deployment?'
+                }
+                echo 'Deploying to Prod env.'
+                sh 'docker container rm -f java-app-prod-instance || true'
+                sh 'docker run -d -p 8083:8080 --name java-app-prod-instance ${dockerImage}:${BUILD_NUMBER}'
+            }
+        }
     }
 }
 
