@@ -67,5 +67,10 @@ pipeline {
             }
         }
     }
+    post { 
+        always { 
+            echo 'This is printed from always in post build!'
+        }
+    }
 }
 
